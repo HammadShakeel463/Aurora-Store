@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Your cart &middot; Aurora Store{% endblock %}
+
+{% block content %}
+<h1>Your cart</h1>
+
+{% if cart_item_count %}
+  <table class="cart-table">
+    <thead><tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+    {% for item in cart %}
+      <tr>
+        <td><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></td>
+        <td>
+          <form action="{% url 'cart:cart_add' item.product.id %}" method="post" class="inline-form">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="20">
+            <input type="hidden" name="override" value="on">
+            <button type="submit" class="link-btn">Update</button>
+          </form>
+        </td>
+        <td>${{ item.price }}</td>
+        <td>${{ item.total_price }}</td>
+        <td>
+          <form action="{% url 'cart:cart_remove' item.product.id %}" method="post" class="inline-form">
+            {% csrf_token %}<button type="submit" class="link-btn danger">Remove</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr><th colspan="3">Total</th><th colspan="2">${{ cart.get_total_price }}</th></tr></tfoot>
+  </table>
+
+  <p class="actions">
+    <a class="btn ghost" href="{% url 'catalog:product_list' %}">Keep shopping</a>
+    <a class="btn" href="{% url 'orders:checkout' %}">Checkout</a>
+  </p>
+{% else %}
+  <p class="empty">Your cart is empty. <a href="{% url 'catalog:product_list' %}">Browse the catalog</a>.</p>
+{% endif %}
+{% endblock %}

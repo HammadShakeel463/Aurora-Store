@@ -1,0 +1,32 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Aurora Store{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{% url 'catalog:product_list' %}">Aurora<span>Store</span></a>
+  <form class="search" action="{% url 'catalog:product_list' %}" method="get">
+    <input type="search" name="q" value="{{ query|default_if_none:'' }}" placeholder="Search products&hellip;" aria-label="Search products">
+    <button type="submit">Search</button>
+  </form>
+  <a class="cart-link" href="{% url 'cart:cart_detail' %}">
+    Cart <span class="badge">{{ cart_item_count }}</span>
+  </a>
+</header>
+
+<main class="wrap">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}<li class="msg {{ message.tags }}">{{ message }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">Aurora Store &middot; Django demo project</footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} &middot; Aurora Store{% endblock %}
+
+{% block content %}
+<article class="detail">
+  <p class="crumb"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></p>
+  <h1>{{ product.name }}</h1>
+  <p class="price big">${{ product.price }}</p>
+  <p class="desc">{{ product.description }}</p>
+
+  {% if product.in_stock %}
+    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-form">
+      {% csrf_token %}
+      <label for="id_quantity">Qty</label>
+      <input type="number" name="quantity" id="id_quantity" value="1" min="1" max="20">
+      <input type="hidden" name="override" value="">
+      <button type="submit" class="btn">Add to cart</button>
+    </form>
+    <p class="stock">{{ product.stock }} available</p>
+  {% else %}
+    <p class="out">Out of stock</p>
+  {% endif %}
+</article>
+
+{% if related_products %}
+  <section class="related">
+    <h2>More in {{ product.category.name }}</h2>
+    <div class="grid">
+      {% for p in related_products %}
+        <article class="card">
+          <h3><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h3>
+          <p class="price">${{ p.price }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+{% endblock %}

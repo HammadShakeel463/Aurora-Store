@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Checkout &middot; Aurora Store{% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+
+<div class="checkout">
+  <section class="summary">
+    <h2>Order summary</h2>
+    <ul class="summary-list">
+      {% for item in cart %}
+        <li>{{ item.quantity }} &times; {{ item.product.name }} <span>${{ item.total_price }}</span></li>
+      {% endfor %}
+    </ul>
+    <p class="total">Total <strong>${{ cart.get_total_price }}</strong></p>
+  </section>
+
+  <section class="form-wrap">
+    <h2>Delivery details</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn">Place order</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
